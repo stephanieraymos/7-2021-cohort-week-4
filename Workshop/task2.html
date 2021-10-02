@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Matching Game</title>
+    <title>Matching Game Task 2</title>
 
     <style>
         img {
@@ -22,7 +22,7 @@
     </style>
 </head>
 <body onload="generateFaces()">
-    
+
     <h1>Matching Game</h1>
 
     <p>Click on the extra smiling face on the left.</p>
@@ -33,7 +33,6 @@
         // window.addEventListener('load', generateFaces); // alternate way to add load event handler, remove the onload event handler from <body> element if using
         let numberOfFaces = 5;
         const theLeftSide = document.getElementById('leftSide');
-        const theRightSide = document.getElementById('rightSide');
 
         function generateFaces() {
             for (let i = 0; i < numberOfFaces; i++) {
@@ -45,31 +44,6 @@
                 face.style.left = randomLeft + 'px';
                 theLeftSide.appendChild(face);
             }
-
-            const leftSideImages = theLeftSide.cloneNode(true);
-            leftSideImages.removeChild(leftSideImages.lastChild);
-            theRightSide.appendChild(leftSideImages);
-
-            theLeftSide.lastChild.addEventListener('click', nextLevel);
-            document.body.addEventListener('click', gameOver);
-        }
-
-        function nextLevel(event) {
-            event.stopPropagation();
-            while (theLeftSide.firstChild) {
-                theLeftSide.removeChild(theLeftSide.firstChild);
-            }
-            while (theRightSide.firstChild) {
-                theRightSide.removeChild(theRightSide.firstChild);
-            }
-            numberOfFaces += 5;
-            generateFaces();
-        }
-
-        function gameOver() {
-            alert('Game Over!');
-            document.body.removeEventListener('click', gameOver)
-            theLeftSide.lastChild.removeEventListener('click', nextLevel)
         }
 
     </script>
