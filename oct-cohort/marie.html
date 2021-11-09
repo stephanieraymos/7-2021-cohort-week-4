@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Matching Game</title>
+    <style>
+      img {
+        position: absolute;
+      }
+      #leftSide,
+      #rightSide {
+        position: absolute;
+        width: 500px;
+        height: 500px;
+        background: turquoise;
+      }
+      #rightSide {
+        left: 500px;
+        border-left: 5px solid;
+      }
+      h1,
+      p,
+      #selectDifficulty {
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+      }
+      button {
+        background-color: rgb(163, 208, 165);
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        font-size: 2em;
+        border-radius: 5px;
+        margin: 0.5em 3em;
+      }
+    </style>
+  </head>
+  <body onload="generateFaces()">
+    <h1>Matching Game</h1>
+    <p>Click on the extra smiling face on the left.</p>
+    <div id="selectDifficulty">
+      <label for="difficulty">Select a diffuculty level: </label>
+      <select id="difficulty" name="difficulty" onChange="generateFaces()">
+        <option value="noselect">Choose difficulty</option>
+        <option value="easy">Easy</option>
+        <option value="medium">Medium</option>
+        <option value="hard">Hard</option>
+        <option value="extreme">Extreme</option>
+      </select>
+    </div>
+    <button id="playAgain" type="button" hidden>Play Again</button>
+
+    <div id="leftSide"></div>
+    <div id="rightSide"></div>
+    <script>
+      const theLeftSide = document.querySelector("#leftSide");
+      const theRightSide = document.querySelector("#rightSide");
+      const playAgainButton = document.querySelector("#playAgain");
+      const difficultySelector = document.querySelector("#selectDifficulty");
+      let numberOfTries = 0;
+
+      function generateFaces() {
+        const selection = document.querySelector("#difficulty");
+        let choice = selection.options[selection.selectedIndex].value;
+
+        if (numberOfTries === 0) {
+          switch (choice) {
+            case "noselect":
+              numberOfFaces = 5;
+              break;
+            case "easy":
+              numberOfFaces = 2;
+              while (theLeftSide.firstChild) {
+                theLeftSide.removeChild(theLeftSide.firstChild);
+              }
+              while (theRightSide.firstChild) {
+                theRightSide.removeChild(theRightSide.firstChild);
+              }
+              break;
+            case "medium":
+              numberOfFaces = 5;
+              while (theLeftSide.firstChild) {
+                theLeftSide.removeChild(theLeftSide.firstChild);
+              }
+              while (theRightSide.firstChild) {
+                theRightSide.removeChild(theRightSide.firstChild);
+              }
+              break;
+            case "hard":
+              numberOfFaces = 8;
+              while (theLeftSide.firstChild) {
+                theLeftSide.removeChild(theLeftSide.firstChild);
+              }
+              while (theRightSide.firstChild) {
+                theRightSide.removeChild(theRightSide.firstChild);
+              }
+              break;
+            case "extreme":
+              numberOfFaces = 10;
+              while (theLeftSide.firstChild) {
+                theLeftSide.removeChild(theLeftSide.firstChild);
+              }
+              while (theRightSide.firstChild) {
+                theRightSide.removeChild(theRightSide.firstChild);
+              }
+              break;
+            default:
+              numberOfFaces = 5;
+          }
+        }
+
+        console.log(choice);
+        console.log(numberOfFaces);
+
+        for (let i = 0; i < numberOfFaces; i++) {
+          const face = document.createElement("img");
+          face.src = "Images/smile.png";
+          const randomTop = Math.floor(Math.random() * 400) + 1;
+          const randomLeft = Math.floor(Math.random() * 400) + 1;
+          face.style.top = randomTop + "px";
+          face.style.left = randomLeft + "px";
+          theLeftSide.appendChild(face);
+        }
+        const leftSideImages = theLeftSide.cloneNode(true);
+        leftSideImages.removeChild(leftSideImages.lastChild);
+        theRightSide.appendChild(leftSideImages);
+
+        difficultySelector.addEventListener("click", difficultySelect);
+        theLeftSide.lastChild.addEventListener("click", nextLevel);
+        playAgainButton.addEventListener("click", loadNewGame);
+        document.body.addEventListener("click", gameOver);
+      }
+
+      function nextLevel() {
+        event.stopPropagation();
+
+        const selection = document.querySelector("#difficulty");
+        let choice = selection.options[selection.selectedIndex].value;
+
+        switch (choice) {
+          case "noselect":
+            interval = 5;
+            break;
+          case "easy":
+            interval = 2;
+            break;
+          case "medium":
+            interval = 5;
+            break;
+          case "hard":
+            interval = 8;
+            break;
+          case "extreme":
+            interval = 10;
+            break;
+          default:
+            interval = 5;
+        }
+
+        numberOfFaces += interval;
+        numberOfTries += 1;
+        while (theLeftSide.firstChild) {
+          theLeftSide.removeChild(theLeftSide.firstChild);
+        }
+        while (theRightSide.firstChild) {
+          theRightSide.removeChild(theRightSide.firstChild);
+        }
+        generateFaces();
+      }
+
+      function gameOver() {
+        alert("Game Over! \n\n You passed " + numberOfTries + " rounds.");
+        document.body.removeEventListener("click", nextLevel);
+        theLeftSide.lastChild.removeEventListener("click", gameOver);
+        //document.body.style.backgroundColor = "grey";
+        playAgainButton.hidden = false;
+      }
+
+      function loadNewGame() {
+        event.stopPropagation();
+        window.location.reload();
+      }
+
+      function difficultySelect() {
+        event.stopPropagation();
+      }
+    </script>
+  </body>
+</html>
